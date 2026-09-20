@@ -2,6 +2,8 @@
 
 Bot de rojão em texto para Telegram, separado do Bandejão e do assistente Hermes.
 
+**Bot do projeto:** [@Papocoobot](https://t.me/Papocoobot), nome exibido **Papocobot2**. Abra a conversa, toque em Iniciar e envie `/acende`.
+
 ## Comportamento
 
 O comando `/acende` envia **seis mensagens**, nesta ordem, com uma pausa de um segundo entre elas:
@@ -23,7 +25,7 @@ POOOOOWW
 - `Fizzzzzz` é uma personalização solicitada por Leonardo, não uma característica atribuída ao original.
 - A sequência é fixa, sem o agrupamento aleatório nem o final `...` do módulo Ruby.
 - `/start` e `/ajuda` mostram as instruções.
-- Em grupos, use `/acende@USUARIO_DO_NOVO_BOT` para direcionar o comando.
+- Em grupos, use `/acende@Papocoobot` para direcionar o comando à instância do projeto. Se criar outra instância, substitua pelo @usuário correspondente.
 - Intervalo mínimo de dez segundos entre acionamentos da mesma conversa, contado desde o início. Acionamentos repetidos são ignorados silenciosamente.
 - Uma sequência em andamento não se sobrepõe a outra na mesma conversa. Conversas diferentes são processadas concorrentemente.
 - O bot não exige privilégios de administrador; precisa de permissão para enviar mensagens.
@@ -68,7 +70,12 @@ O modo de privacidade pode permanecer habilitado; prefira o comando com @usuári
 
 ## Serviço no servidor
 
-O arquivo `deploy/papocobot.service` foi preparado para `/home/hermes/projects/Papocobot`. Não está instalado nem ativo.
+O arquivo `deploy/papocobot.service` é o modelo para executar o bot em `/home/hermes/projects/Papocobot`. Na instância do projeto, o serviço independente `papocobot.service` está configurado para inicialização automática. Para consultar o estado no servidor:
+
+```bash
+systemctl is-active papocobot.service
+systemctl is-enabled papocobot.service
+```
 
 Para ativação, é necessário primeiro criar `.env` com `PAPOCO_BOT_TOKEN=...`, permissões `0600` e proprietário `hermes`. O modelo sem segredo é `.env.example`. O systemd lê esse arquivo; a execução manual exige exportar a variável como acima.
 
@@ -78,4 +85,4 @@ Nenhum serviço do Hermes precisa ser reiniciado. Se o projeto for movido, ajust
 
 Os testes verificam a sequência exata, pausas, controle de intervalo, bloqueio de sobreposição, liberação após erro, comandos direcionados ao próprio bot, rejeição de comandos para outro bot e proteção das mensagens de erro. O roteamento real da biblioteca Telegram é exercitado com transporte simulado, sem envio à API externa.
 
-O teste ponta a ponta no Telegram depende do token do novo bot e de uma conversa de teste. Não está concluído apenas por os testes locais passarem.
+A autenticação do bot e o cadastro dos comandos foram verificados na API real do Telegram. Para validar o fluxo ponta a ponta, envie `/acende` ao bot e confira as seis mensagens. Os testes locais e a confirmação de processo ativo não substituem essa verificação na conversa.
