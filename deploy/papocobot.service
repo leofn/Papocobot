@@ -1,0 +1,27 @@
+[Unit]
+Description=Papocobot - rojão em texto para Telegram
+Wants=network-online.target
+After=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=hermes
+WorkingDirectory=/home/hermes/projects/Papocobot
+EnvironmentFile=/home/hermes/projects/Papocobot/.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/home/hermes/projects/Papocobot/.venv/bin/python /home/hermes/projects/Papocobot/papoco.py
+Restart=on-failure
+RestartSec=10
+KillSignal=SIGINT
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

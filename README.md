@@ -1,75 +1,81 @@
-Telegram Bandejão Bot
-=====================
+# Papocobot
 
-Esse bot usa a [API][1] do [Telegram][2] para mostrar o cardápio do Restaurante Universitário da USP
+Bot de rojão em texto para Telegram, separado do Bandejão e do assistente Hermes.
 
-Como Usar
----------
+## Comportamento
 
-Para usar o bot, basta enviar qualquer mensagem para [@BandejaoBot][3] no [Telegram][2] e o bot responderá com o cardápio da próxima refeição
+O comando `/acende` envia **seis mensagens**, nesta ordem, com uma pausa de um segundo entre elas:
 
-Interface:
+```text
+Fizzzzzz
 
-![Interface][5]
+pra pra pra pra pra pra pra pra
 
-Existem também dois comandos principais, /almoco <Dia da Semana> e /jantar <Dia da Semana> a resposta desses comandos é o cardápio do almoço/jantar do dia da semana especificado (ou do dia atual, caso vazio)
+pra pra
 
-É possível alterar o Restaurante nas configurações do bot, através do comando /configuracoes
+pra
 
-Também é possivel usar o bot no modo [inline][4]. Para isso basta digitar [@BandejaoBot][3] na caixa de texto do [Telegram][2] em qualquer conversa. Aparecerá uma janela de seleção como na imagem abaixo
+pra
 
-No modo [inline][4], o bot aceita também um dia da semana e opção de almoço ou janta
- 
-![Exemplo inline][5]
+POOOOOWW
+```
 
-API Web
--------
+- `Fizzzzzz` é uma personalização solicitada por Leonardo, não uma característica atribuída ao original.
+- A sequência é fixa, sem o agrupamento aleatório nem o final `...` do módulo Ruby.
+- `/start` e `/ajuda` mostram as instruções.
+- Em grupos, use `/acende@USUARIO_DO_NOVO_BOT` para direcionar o comando.
+- Intervalo mínimo de dez segundos entre acionamentos da mesma conversa, contado desde o início. Acionamentos repetidos são ignorados silenciosamente.
+- Uma sequência em andamento não se sobrepõe a outra na mesma conversa. Conversas diferentes são processadas concorrentemente.
+- O bot não exige privilégios de administrador; precisa de permissão para enviar mensagens.
+- Não há IA, banco de dados, persistência de mensagens ou dependências da USP. O controle de intervalo fica em memória e é reiniciado junto com o processo.
+- Se o Telegram recusar um envio, a sequência para, libera a conversa e registra somente o tipo do erro. O bot não tenta reenviar automaticamente uma sequência incompleta.
 
-Status: **Desativada**
+## Origem
 
-O bot também está equipado com uma simples API web, disponível no endereço [http://bit.ly/2lQagON](http://bit.ly/2lQagON)
+Clone de `gp2112/bandejao-bot`, commit `d778ec7386d50ba7343b67fea8e7718572f27374`. O código Ruby de referência foi preservado em `legacy/bandejao/`. Ele não é executado pelo novo bot. Consulte `NOTICE.md` e `LICENSE`.
 
-A api tem duas rotas configuradas:
+A implementação Python é independente. Não foi comprovado vínculo entre o repositório de referência e a conta original `@Papocobot`.
 
-####/date/<dia>/<mes>/<periodo>
+## Instalação
 
-Nesse modo é possível receber o conteúdo do cardápio para o dia <dia> no mes <mes> no período <periodo>, período pode ser __almoco__ ou __jantar__.
+Validado com Python 3.11. Instalação isolada:
 
-####/next
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python -m pip check
+.venv/bin/python -m unittest -v
+```
 
-Nesse modo é possível receber o conteúdo do cardápio para a próxima refeição
+`requirements.txt` fixa a dependência direta; `requirements.lock` registra também suas dependências transitivas utilizadas nos testes.
 
-Problemas/Bugs
---------------
+## Criar e ativar o bot
 
-Para bugs no código, favor usar o canal de [Issues][7] do GitHub.
+1. Abra o perfil oficial `@BotFather` e use `/newbot`.
+2. Use `Papocobot` como nome exibido e escolha um @usuário disponível terminado em `bot`.
+3. Guarde o token em local privado. Não o publique em repositórios nem o reutilize em outro serviço.
+4. Para executar manualmente em Bash, sem colocar o token no histórico:
 
-Para outros problemas, dúvidas ou sugestões, mande-me uma mensagem [@Kasama][8], use o comando /feedback do bot, ou use o canal de [Issues][7] do GitHub.
+```bash
+read -rsp 'Token do novo bot: ' PAPOCO_BOT_TOKEN
+export PAPOCO_BOT_TOKEN
+.venv/bin/python papoco.py
+```
 
-Contribuindo
-------------
+Ao iniciar, atualizações antigas pendentes são descartadas para evitar rajadas de respostas atrasadas. Só deve existir uma instância de polling para este token.
 
-Contribuições são muito bem-vindas.
+O modo de privacidade pode permanecer habilitado; prefira o comando com @usuário nos grupos. Não é necessário ler as outras mensagens do grupo.
 
-Para contribuir, favor seguir os passos
+## Serviço no servidor
 
-- Fazer um `fork` do repositório
-- Alterar as partes que desejar
-- Criar um novo `Pull Request`
-- Se necessário, discutir sobre o pull request antes que ele seja aceito
+O arquivo `deploy/papocobot.service` foi preparado para `/home/hermes/projects/Papocobot`. Não está instalado nem ativo.
 
-Licença
--------
-Copyright (c) 2016 Roberto Pommella Alegro  
+Para ativação, é necessário primeiro criar `.env` com `PAPOCO_BOT_TOKEN=...`, permissões `0600` e proprietário `hermes`. O modelo sem segredo é `.env.example`. O systemd lê esse arquivo; a execução manual exige exportar a variável como acima.
 
-Esse bot é distribuido sob a licença [MIT][9].
+Nenhum serviço do Hermes precisa ser reiniciado. Se o projeto for movido, ajuste os caminhos da unidade systemd.
 
-[1]: https://core.telegram.org/bots/api
-[2]: https://telegram.org/
-[3]: https://t.me/BandejaoBot
-[4]: https://core.telegram.org/bots/inline
-[5]: img/inlineEx1.png
-[6]: img/interface.png
-[7]: https://github.com/Kasama/bandejao-bot/issues
-[8]: http://telegram.me/Kasama
-[9]: https://opensource.org/licenses/MIT
+## Estado da validação
+
+Os testes verificam a sequência exata, pausas, controle de intervalo, bloqueio de sobreposição, liberação após erro, comandos direcionados ao próprio bot, rejeição de comandos para outro bot e proteção das mensagens de erro. O roteamento real da biblioteca Telegram é exercitado com transporte simulado, sem envio à API externa.
+
+O teste ponta a ponta no Telegram depende do token do novo bot e de uma conversa de teste. Não está concluído apenas por os testes locais passarem.
