@@ -26,7 +26,7 @@ POOOOOWW
 
 ### /bomba_de_mil
 
-Envia as falas abaixo em mensagens separadas, com uma pausa de um segundo entre elas, e termina com o desenho TNT em uma sexta mensagem monoespaçada:
+Envia as falas abaixo em mensagens separadas, com uma pausa de um segundo entre elas, e termina com uma explosão compacta em uma sexta mensagem de texto simples:
 
 ```text
 Fiiiiiizzzzzzzzzzzzzzzzzzz
@@ -40,14 +40,9 @@ Zzzzzzzzzzzzz ZZZZ
 CATAPUUUUUMMMMMM
 ```
 
-```text
- ___________________    . , ; .
-(___________________|~~~~~X.;' .
-                      ' `" ' `
-            TNT
-```
+**Explosão final:** ˗ˏˋ ⋆✴︎˚｡⋆ˎˊ˗
 
-O desenho vem da [referência escolhida pelo usuário no ASCII Art Archive](https://www.asciiart.eu/art/aa0fe965fc517e0b), que identifica o artista como desconhecido. Espaços e caracteres são preservados; somente as quebras de linha são representadas como LF no código. O Telegram recebe a arte como HTML escapado dentro de `<pre>`, não como Markdown.
+Símbolo Unicode fornecido e escolhido pelo usuário. É enviado como texto simples, sem HTML ou bloco monoespaçado. Seus caracteres, espaços e o seletor de apresentação textual (U+FE0E) são preservados.
 
 Em grupos: `/bomba_de_mil@Papocoobot`. Os dois efeitos compartilham o intervalo de proteção por conversa, evitando sequências sobrepostas.
 

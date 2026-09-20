@@ -1,5 +1,4 @@
 """Exercita o roteamento real da biblioteca com uma API Telegram simulada."""
-import html
 import json
 import unittest
 from unittest.mock import AsyncMock, patch
@@ -52,8 +51,8 @@ class TelegramTests(unittest.IsolatedAsyncioTestCase):
                 ("/acende", EXPECTED),
                 ("/acende@RojaoTesteBot", EXPECTED),
                 ("/acende@OutroBot", None),
-                ("/bomba_de_mil", EXPECTED_BOMBA + ["<pre>" + html.escape(EXPECTED_ART) + "</pre>"]),
-                ("/bomba_de_mil@RojaoTesteBot", EXPECTED_BOMBA + ["<pre>" + html.escape(EXPECTED_ART) + "</pre>"]),
+                ("/bomba_de_mil", EXPECTED_BOMBA + [EXPECTED_ART]),
+                ("/bomba_de_mil@RojaoTesteBot", EXPECTED_BOMBA + [EXPECTED_ART]),
                 ("/bomba_de_mil@OutroBot", None),
                 ("/start", "Use /acende"),
                 ("/ajuda", "Use /acende"),
@@ -78,7 +77,7 @@ class TelegramTests(unittest.IsolatedAsyncioTestCase):
                         if command.startswith(("/acende", "/bomba_de_mil")):
                             self.assertEqual([message["text"] for message in messages], expected)
                             if command.startswith("/bomba_de_mil"):
-                                self.assertEqual(messages[-1]["parse_mode"], "HTML")
+                                self.assertNotIn("parse_mode", messages[-1])
                         else:
                             self.assertEqual(len(messages), 1)
                             self.assertIn(expected, messages[0]["text"])

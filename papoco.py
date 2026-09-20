@@ -4,7 +4,6 @@ import asyncio
 import logging
 import os
 
-from html import escape
 from time import monotonic
 
 from telegram.error import TelegramError
@@ -22,12 +21,7 @@ BOMBA_DE_MIL = (
     'Zzzzzzzzzzzzz ZZZZ',
     'CATAPUUUUUMMMMMM',
 )
-TNT_ASCII = (
-    ' ___________________    . , ; .\n'
-    "(___________________|~~~~~X.;' .\n"
-    '                      \' `" \' `\n'
-    '            TNT'
-)
+EXPLOSAO = '˗ˏˋ ⋆✴︎˚｡⋆ˎˊ˗'
 
 
 async def acende(update, context):
@@ -35,7 +29,7 @@ async def acende(update, context):
 
 
 async def bomba_de_mil(update, context):
-    await _disparar(update, context, BOMBA_DE_MIL, TNT_ASCII)
+    await _disparar(update, context, BOMBA_DE_MIL, EXPLOSAO)
 
 
 async def _disparar(update, context, textos, arte=None):
@@ -52,9 +46,7 @@ async def _disparar(update, context, textos, arte=None):
             await update.effective_message.reply_text(text, do_quote=False)
         if arte is not None:
             await asyncio.sleep(1.0)
-            await update.effective_message.reply_text(
-                "<pre>" + escape(arte) + "</pre>", do_quote=False, parse_mode="HTML",
-            )
+            await update.effective_message.reply_text(arte, do_quote=False)
     finally:
         context.chat_data["running"] = False
 
@@ -62,7 +54,7 @@ async def _disparar(update, context, textos, arte=None):
 async def ajuda(update, context):
     await update.effective_message.reply_text(
         "Use /acende para soltar o rojão.\n"
-        "Use /bomba_de_mil para a bomba de mil com desenho TNT.\n"
+        "Use /bomba_de_mil para a bomba de mil com explosão.\n"
         "Em grupos, acrescente @" + context.bot.username + " ao comando.\n"
         "Intervalo de 10 segundos por conversa."
     )

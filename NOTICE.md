@@ -9,6 +9,10 @@
 
 A implementação Python é nova. Ela reproduz o comportamento solicitado por Leonardo Fernandes Nascimento, com sequência fixa e a personalização inicial `Fizzzzzz`. Não foi comprovado que o repositório de referência seja o código da conta `@Papocobot`; este projeto não se apresenta como a conta original.
 
-## Desenho TNT
+## Símbolo atual
+
+O símbolo ˗ˏˋ ⋆✴︎˚｡⋆ˎˊ˗ foi fornecido e escolhido pelo usuário para substituir o desenho TNT.
+
+## Desenho TNT (histórico)
 
 Fonte escolhida pelo usuário: https://www.asciiart.eu/art/aa0fe965fc517e0b . A página identifica o artista como "Unknown". A atribuição à fonte foi mantida, sem reivindicar autoria do desenho. A página consultada não informa uma licença específica para essa arte; não se atribui a ela a licença MIT do código do projeto.

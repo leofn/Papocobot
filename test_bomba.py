@@ -1,5 +1,4 @@
 """Contrato textual e formatação da bomba de mil. Transporte simulado."""
-import html
 import unittest
 from unittest.mock import AsyncMock, patch
 
@@ -13,7 +12,7 @@ EXPECTED_BOMBA = [
     "Zzzzzzzzzzzzz ZZZZ",
     "CATAPUUUUUMMMMMM",
 ]
-EXPECTED_ART = ' ___________________    . , ; .\n(___________________|~~~~~X.;\' .\n                      \' `" \' `\n            TNT'
+EXPECTED_ART = '˗ˏˋ ⋆✴︎˚｡⋆ˎˊ˗'
 
 
 class BombaTests(unittest.IsolatedAsyncioTestCase):
@@ -36,7 +35,7 @@ class BombaTests(unittest.IsolatedAsyncioTestCase):
                 await papoco.bomba_de_mil(update, context)
         self.assertFalse(context.chat_data.get("running"))
 
-    async def test_falas_exatas_e_explosao_em_bloco_monoespacado(self):
+    async def test_falas_exatas_e_explosao_unicode_sem_bloco_de_codigo(self):
         self.assertTrue(callable(getattr(papoco, "bomba_de_mil", None)), "Comando ainda não implementado")
         update, context = interaction()
         with patch("asyncio.sleep", new_callable=AsyncMock) as sleep:
@@ -44,11 +43,12 @@ class BombaTests(unittest.IsolatedAsyncioTestCase):
         calls = update.effective_message.reply_text.await_args_list
         self.assertEqual([call.args[0] for call in calls[:-1]], EXPECTED_BOMBA)
         self.assertTrue(all(call.kwargs == {"do_quote": False} for call in calls[:-1]))
-        self.assertEqual(calls[-1].args[0], "<pre>" + html.escape(EXPECTED_ART) + "</pre>")
-        self.assertEqual(calls[-1].kwargs, {"do_quote": False, "parse_mode": "HTML"})
+        self.assertEqual(calls[-1].args[0], EXPECTED_ART)
+        self.assertEqual(calls[-1].kwargs, {"do_quote": False})
         self.assertEqual(sleep.await_count, len(EXPECTED_BOMBA))
         self.assertTrue(all(call.args == (1.0,) for call in sleep.await_args_list))
-        self.assertTrue(EXPECTED_ART.isascii())
+        self.assertFalse(EXPECTED_ART.isascii())
+        self.assertIn("\ufe0e", EXPECTED_ART)
         self.assertLessEqual(max(map(len, EXPECTED_ART.splitlines())), 32)
 
 
