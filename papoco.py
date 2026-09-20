@@ -4,6 +4,7 @@ import asyncio
 import logging
 import os
 
+from html import escape
 from time import monotonic
 
 from telegram.error import TelegramError
@@ -14,7 +15,30 @@ INTERVALO = 10.0
 ROJAO = "Fizzzzzz\n\npra pra pra pra pra pra pra pra\n\npra pra\n\npra\n\npra\n\nPOOOOOWW"
 
 
+BOMBA_DE_MIL = (
+    'Fiiiiiizzzzzzzzzzzzzzzzzzz',
+    'Zzzzzzzzzzzz',
+    'Zzzzzzzzzzzzz',
+    'Zzzzzzzzzzzzz ZZZZ',
+    'CATAPUUUUUMMMMMM',
+)
+TNT_ASCII = (
+    ' ___________________    . , ; .\n'
+    "(___________________|~~~~~X.;' .\n"
+    '                      \' `" \' `\n'
+    '            TNT'
+)
+
+
 async def acende(update, context):
+    await _disparar(update, context, ROJAO.split("\n\n"))
+
+
+async def bomba_de_mil(update, context):
+    await _disparar(update, context, BOMBA_DE_MIL, TNT_ASCII)
+
+
+async def _disparar(update, context, textos, arte=None):
     now = monotonic()
     last = context.chat_data.get("last_fire")
     if context.chat_data.get("running") or (last is not None and now - last < INTERVALO):
@@ -22,10 +46,15 @@ async def acende(update, context):
     context.chat_data["last_fire"] = now
     context.chat_data["running"] = True
     try:
-        for number, text in enumerate(ROJAO.split("\n\n")):
+        for number, text in enumerate(textos):
             if number:
                 await asyncio.sleep(1.0)
             await update.effective_message.reply_text(text, do_quote=False)
+        if arte is not None:
+            await asyncio.sleep(1.0)
+            await update.effective_message.reply_text(
+                "<pre>" + escape(arte) + "</pre>", do_quote=False, parse_mode="HTML",
+            )
     finally:
         context.chat_data["running"] = False
 
@@ -33,7 +62,8 @@ async def acende(update, context):
 async def ajuda(update, context):
     await update.effective_message.reply_text(
         "Use /acende para soltar o rojão.\n"
-        "No grupo, você também pode usar /acende@" + context.bot.username + ".\n"
+        "Use /bomba_de_mil para a bomba de mil com desenho TNT.\n"
+        "Em grupos, acrescente @" + context.bot.username + " ao comando.\n"
         "Intervalo de 10 segundos por conversa."
     )
 
@@ -52,6 +82,7 @@ def build_application(token, request=None):
         builder.get_updates_request(request)
     app = builder.build()
     app.add_handler(CommandHandler("acende", acende))
+    app.add_handler(CommandHandler("bomba_de_mil", bomba_de_mil))
     app.add_handler(CommandHandler(["start", "ajuda"], ajuda))
     app.add_error_handler(on_error)
     return app

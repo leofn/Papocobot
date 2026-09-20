@@ -6,6 +6,8 @@ Bot de rojão em texto para Telegram, separado do Bandejão e do assistente Herm
 
 ## Comportamento
 
+### /acende
+
 O comando `/acende` envia **seis mensagens**, nesta ordem, com uma pausa de um segundo entre elas:
 
 ```text
@@ -21,6 +23,35 @@ pra
 
 POOOOOWW
 ```
+
+### /bomba_de_mil
+
+Envia as falas abaixo em mensagens separadas, com uma pausa de um segundo entre elas, e termina com o desenho TNT em uma sexta mensagem monoespaçada:
+
+```text
+Fiiiiiizzzzzzzzzzzzzzzzzzz
+
+Zzzzzzzzzzzz
+
+Zzzzzzzzzzzzz
+
+Zzzzzzzzzzzzz ZZZZ
+
+CATAPUUUUUMMMMMM
+```
+
+```text
+ ___________________    . , ; .
+(___________________|~~~~~X.;' .
+                      ' `" ' `
+            TNT
+```
+
+O desenho vem da [referência escolhida pelo usuário no ASCII Art Archive](https://www.asciiart.eu/art/aa0fe965fc517e0b), que identifica o artista como desconhecido. Espaços e caracteres são preservados; somente as quebras de linha são representadas como LF no código. O Telegram recebe a arte como HTML escapado dentro de `<pre>`, não como Markdown.
+
+Em grupos: `/bomba_de_mil@Papocoobot`. Os dois efeitos compartilham o intervalo de proteção por conversa, evitando sequências sobrepostas.
+
+### Regras comuns
 
 - `Fizzzzzz` é uma personalização solicitada por Leonardo, não uma característica atribuída ao original.
 - A sequência é fixa, sem o agrupamento aleatório nem o final `...` do módulo Ruby.

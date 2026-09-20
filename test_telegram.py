@@ -1,4 +1,5 @@
 """Exercita o roteamento real da biblioteca com uma API Telegram simulada."""
+import html
 import json
 import unittest
 from unittest.mock import AsyncMock, patch
@@ -8,6 +9,7 @@ from telegram.request import BaseRequest
 
 import papoco
 from test_papoco import EXPECTED
+from test_bomba import EXPECTED_BOMBA, EXPECTED_ART
 
 
 class LocalTelegram(BaseRequest):
@@ -50,6 +52,9 @@ class TelegramTests(unittest.IsolatedAsyncioTestCase):
                 ("/acende", EXPECTED),
                 ("/acende@RojaoTesteBot", EXPECTED),
                 ("/acende@OutroBot", None),
+                ("/bomba_de_mil", EXPECTED_BOMBA + ["<pre>" + html.escape(EXPECTED_ART) + "</pre>"]),
+                ("/bomba_de_mil@RojaoTesteBot", EXPECTED_BOMBA + ["<pre>" + html.escape(EXPECTED_ART) + "</pre>"]),
+                ("/bomba_de_mil@OutroBot", None),
                 ("/start", "Use /acende"),
                 ("/ajuda", "Use /acende"),
             ]
@@ -70,11 +75,14 @@ class TelegramTests(unittest.IsolatedAsyncioTestCase):
                         self.assertEqual(len(transport.messages), before)
                     else:
                         messages = transport.messages[before:]
-                        if command.startswith("/acende"):
+                        if command.startswith(("/acende", "/bomba_de_mil")):
                             self.assertEqual([message["text"] for message in messages], expected)
+                            if command.startswith("/bomba_de_mil"):
+                                self.assertEqual(messages[-1]["parse_mode"], "HTML")
                         else:
                             self.assertEqual(len(messages), 1)
                             self.assertIn(expected, messages[0]["text"])
+                            self.assertIn("/bomba_de_mil", messages[0]["text"])
 
 
 if __name__ == "__main__":
